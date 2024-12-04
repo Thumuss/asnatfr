@@ -4,6 +4,7 @@ stages:
   - update
 
 update-job:
+  stage: update
   script:
     - apt update -y && apt upgrade -y && apt install git -y
     - git config remote.github.url >&- || git remote add github https://$TOKEN_GITHUB@github.com/Thumuss/asnatfr
