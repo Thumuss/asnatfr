@@ -5,6 +5,8 @@ export interface ObjActeur {
   acteur: Acteur;
 }
 
+type Adresse = AdressePostale | AdresseTelephonique | AdresseSite | AdresseMail;
+
 export interface Acteur {
   "@xmlns": ref;
   uid: UID;
@@ -18,8 +20,108 @@ export interface Acteur {
     };
   };
   adresses: {
-    adresse: (AdressePostale | AdresseElectronique | AdresseSite)[];
+    adresse: Adresse[] | Adresse;
   };
+  // mandats: {
+  //   mandat:
+  // }
+}
+
+export interface MandatSimple {
+  "@xmlns:xsi": "http://www.w3.org/2001/XMLSchema-instance";
+  "@xsi:type": "AdresseMail_Type";
+  uid: string;
+  acteurRef: string;
+  legislature: null | "16";
+  typeOrgane: typeOrgane;
+  datePublication: null | string;
+  dateFin: null | string;
+  preseance: null | string;
+  nominPrincipale: "1" | "0";
+  infosQualite: infosQualite;
+  organes: organes;
+}
+
+export interface organes {
+  organeRef: string;
+}
+
+export interface infosQualite {
+  codeQualite: null | codeQualite;
+  libQualite: string
+  libQualiteSex: string
+}
+
+// " ", "-", "'" => "_"
+export enum codeQualite {
+  Membre,
+  Titulaire,
+  Député_non_inscrit,
+  Secrétaire,
+  Co_Président,
+  Rapporteur,
+  Suppléant,
+  Vice_Président,
+  Président,
+  Autre_membre_du_Bureau,
+  membre,
+  Ministre_délégué,
+  Secrétaire_d_État,
+  Membre_apparenté,
+  Rapporteur_thématique,
+  Membre_de_droit,
+  Secrétaire_du_Bureau,
+  Ministre,
+  Membre_rattaché,
+  Secrétaire_général,
+  Rapporteur_général,
+  Premier_Vice_Président,
+  Trésorier,
+  Président_délégué,
+  Trésorier_adjoint,
+  Président_de_droit,
+  Premier_ministre,
+  Vice_Président_délégué,
+  Garde_des_sceaux,
+  Président_exécutif,
+  Secrétaire_général_adjoint,
+}
+
+export enum typeOrgane {
+  PARPOL,
+  CNPS,
+  CNPE,
+  GP,
+  COMPER,
+  ORGEXTPARL,
+  GE,
+  GA,
+  DELEGSENAT,
+  API,
+  GROUPESENAT,
+  COMSENAT,
+  CMP,
+  DELEG,
+  GEVI,
+  GOUVERNEMENT,
+  MINISTERE,
+  COMSPSENAT,
+  DELEGBUREAU,
+}
+
+export interface MendatMission {}
+export interface MendatParlementaire {}
+export interface MendatAvecSuppleant {}
+
+export interface AdresseMail {
+  "@xmlns:xsi": "http://www.w3.org/2001/XMLSchema-instance";
+  "@xsi:type": "AdresseMail_Type";
+  uid: string;
+  type: "15";
+  typeLibelle: "Mèl";
+  poids: null | "2" | "22";
+  adresseDeRattachement: string | null;
+  valElec: string;
 }
 
 export interface AdresseSite {
@@ -27,13 +129,19 @@ export interface AdresseSite {
   "@xsi:type": "AdresseSiteWeb_Type";
   uid: string;
   type: string;
-  typeLibelle: "Url sénateur";
+  typeLibelle:
+    | "Url sénateur"
+    | "Facebook"
+    | "Twitter"
+    | "Instagram"
+    | "Linkedin"
+    | "Site internet";
   poids: string | null;
-  adresseDeRattachement: null;
-  valElec: string;
+  adresseDeRattachement: string | null;
+  valElec: string | null;
 }
 
-export interface AdresseElectronique {
+export interface AdresseTelephonique {
   "@xmlns:xsi": "http://www.w3.org/2001/XMLSchema-instance";
   "@xsi:type": "AdresseTelephonique_Type";
   uid: string;
@@ -412,7 +520,7 @@ export enum Metier {
   "Professeur agrégé de biologie",
 }
 
-export enum Addr { 
+export enum Addr {
   "AdressePostale_Type",
   "AdresseMail_Type",
   "AdresseSiteWeb_Type",
