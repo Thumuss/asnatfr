@@ -8,4 +8,5 @@ update-job:
   script:
     - apt update -y && apt upgrade -y && apt install git -y
     - git config remote.github.url >&- || git remote add github https://$TOKEN_GITHUB@github.com/Thumuss/asnatfr
-    - git push -o ci.skip github HEAD:main || echo "Can't push 😔" 
+    - git switch $CI_COMMIT_BRANCH
+    - git push -o ci.skip github $CI_COMMIT_BRANCH || echo "Can't push 😔" 
